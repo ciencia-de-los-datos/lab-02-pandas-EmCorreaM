@@ -185,10 +185,10 @@ def pregunta_10():
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
     tbl0_copy = tbl0.copy()
-    tbl0_grouped = tbl0_copy.groupby('_c1').apply(lambda x: ':'.join(x['_c2'].astype(str))).reset_index()
-    tbl0_grouped.columns = ['_c1', '_c2']
+    tbl0_grouped = tbl0_copy.groupby('_c1')['_c2'].apply(lambda x: ':'.join(sorted(x.astype(str)))).reset_index()
     tbl0_grouped.index.name = '_c0'
     return tbl0_grouped
+
 
 
 def pregunta_11():
