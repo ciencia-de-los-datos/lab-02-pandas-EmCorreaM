@@ -22,7 +22,7 @@ def pregunta_01():
     40
 
     """
-    return
+    return tbl0.shape[0]
 
 
 def pregunta_02():
@@ -33,7 +33,7 @@ def pregunta_02():
     4
 
     """
-    return
+    return tbl0.shape[-1]
 
 
 def pregunta_03():
@@ -50,7 +50,10 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    tlb0_c1 = tbl0["_c1"].value_counts() # Me cuenta las veces que aparece cada letra
+    tlb0_c1 = tlb0_c1.sort_index()       # Ordena de manera alfabetica (tiene mas parametros)
+
+    return tlb0_c1
 
 
 def pregunta_04():
@@ -65,7 +68,9 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    tbl0_c = tbl0.copy()
+    mean_letters = tbl0_c.groupby("_c1")["_c2"].mean()
+    return mean_letters
 
 
 def pregunta_05():
@@ -82,7 +87,10 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    tbl0_c = tbl0.copy()
+    max_value_letters = tbl0_c.groupby("_c1")["_c2"].max()
+    return max_value_letters
+
 
 
 def pregunta_06():
@@ -94,8 +102,10 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
-
+    tbl1_c = tbl1.copy()
+    letters_list = set(tbl1_c["_c4"].str.upper())
+    letters_list = list(sorted(letters_list))
+    return letters_list
 
 def pregunta_07():
     """
@@ -110,8 +120,9 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
-
+    tbl0_c = tbl0.copy()
+    sum_letters = tbl0_c.groupby("_c1")["_c2"].sum()
+    return sum_letters
 
 def pregunta_08():
     """
@@ -128,7 +139,12 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    tbl0_c = tbl0.copy()
+    tbl0_c["suma"] = tbl0_c["_c0"] + tbl0_c["_c2"]
+    return tbl0_c
+
+
+
 
 
 def pregunta_09():
@@ -146,7 +162,12 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    tbl0_c = tbl0.copy()
+    tbl0_c["year"] = tbl0_c["_c3"].str.split("-").str[0]
+    
+    return tbl0_c
+
+
 
 
 def pregunta_10():
@@ -163,7 +184,11 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    tbl0_copy = tbl0.copy()
+    tbl0_grouped = tbl0_copy.groupby('_c1').apply(lambda x: ':'.join(x['_c2'].astype(str))).reset_index()
+    tbl0_grouped.columns = ['_c1', '_c2']
+    tbl0_grouped.index.name = '_c0'
+    return tbl0_grouped
 
 
 def pregunta_11():
@@ -182,7 +207,10 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+    tbl1_copy = tbl1.copy()
+    tbl1_grouped = tbl1_copy.groupby('_c0')['_c4'].apply(lambda x: ','.join(sorted(x))).reset_index()
+    return tbl1_grouped
+    
 
 
 def pregunta_12():
@@ -200,8 +228,10 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
-
+    tbl2_copy = tbl2.copy()
+    tbl2_copy['_c5'] = tbl2_copy.apply(lambda row: f"{row['_c5a']}:{row['_c5b']}", axis=1)
+    tbl2_grouped = tbl2_copy.groupby('_c0')['_c5'].apply(lambda x: ','.join(sorted(x))).reset_index()
+    return tbl2_grouped
 
 def pregunta_13():
     """
@@ -217,4 +247,7 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    merged_table = pd.merge(tbl0, tbl2, on='_c0')
+    sum_c5b = merged_table.groupby('_c1')['_c5b'].sum()
+    return sum_c5b
+    
